@@ -8,11 +8,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, r2_score
 from xgboost import XGBRegressor
 
-# Load data from CSV (adjusted if using local GitHub repo structure)
 @st.cache_data
 def load_data():
-    return pd.read_csv("fludata.csv")  # Make sure this name matches exactly
-
+    url = "https://raw.githubusercontent.com/cfernandez3/CAPSTONE-DELOITTE-Project/refs/heads/main/Capstone_flu(04092025).csv"
+    return pd.read_csv(url)
+    
 df = load_data()
 
 st.title("Flu Outbreak Risk Predictor")
