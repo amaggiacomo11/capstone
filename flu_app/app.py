@@ -11,7 +11,7 @@ from xgboost import XGBRegressor
 # Load data from GitHub
 @st.cache_data
 def load_data():
-    return pd.read_csv("flu_app/flu_data.csv")
+    return pd.read_csv("flu_data.csv")
 
 df = load_data()
 
