@@ -18,6 +18,14 @@ df = load_data()
 st.title("Flu Outbreak Risk Predictor")
 st.write("This app predicts flu cases per 100k people and determines outbreak risk level.")
 
+# ------------------------
+# NEW: Personal input dropdowns
+# ------------------------
+st.sidebar.header("Your Info (Optional)")
+selected_state = st.sidebar.selectbox("Select your state:", sorted(df["State"].dropna().unique()))
+selected_sex = st.sidebar.selectbox("Select your sex:", sorted(df["Sex"].dropna().unique()))
+selected_race = st.sidebar.selectbox("Select your race:", sorted(df["race"].dropna().unique()))
+
 # Define categorical columns manually
 categorical_cols = ["race", "Sex"]
 
