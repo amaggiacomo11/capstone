@@ -20,13 +20,32 @@ st.set_page_config(page_title="Flu Outbreak Predictor", layout="wide")
 st.title("🦠 Flu Outbreak Risk Predictor")
 st.write("This app predicts flu cases per 100k people and determines outbreak risk level.")
 
+# Define race and age group columns
+race_columns = [
+    "White",
+    "Black or African American",
+    "American Indian and Alaska Native",
+    "Asian",
+    "Native Hawaiian and Other Pacific Islander",
+    "Some other race"
+]
+
+age_columns = [
+    "Under 5 years", "5 to 9 years", "10 to 14 years", "15 to 19 years",
+    "20 to 24 years", "25 to 34 years", "35 to 44 years", "45 to 54 years",
+    "55 to 59 years", "60 to 64 years", "65 to 74 years", "75 to 84 years", "85 years and over"
+]
+
 # Sidebar – Personal Info Input
 st.sidebar.header("Your Info (Optional)")
 selected_state = st.sidebar.selectbox("Select your state:", sorted(df["State"].dropna().unique()))
-selected_race = st.sidebar.selectbox("Select your race:", sorted(df["race"].dropna().unique()))
+
+# Sidebar group toggles
+st.sidebar.subheader("👤 Customize Population Segments")
+selected_races = st.sidebar.multiselect("Select race groups to simulate:", race_columns, default=race_columns)
+selected_ages = st.sidebar.multiselect("Select age groups to simulate:", age_columns, default=age_columns)
 
 # Features & Target
-categorical_cols = ["race"]  # "Sex" removed as it's not a column
 X = df.drop(columns=[
     "cases_per_100k", "estimated_positive_cases", "Percent_Positive",
     "Total_population", "Total_Specimens", "Week", "LandArea_SqMi", "Month", "State"
@@ -34,7 +53,7 @@ X = df.drop(columns=[
 y = df["cases_per_100k"]
 
 # Numeric Columns
-numerical_cols = X.select_dtypes(include=["float64", "int64"]).columns.difference(categorical_cols)
+numerical_cols = X.select_dtypes(include=["float64", "int64"]).columns
 
 # Train/test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -52,11 +71,16 @@ model.fit(X_train, y_train)
 # Input Sliders
 st.sidebar.header("Adjust Variables")
 input_data = {}
+
 for col in numerical_cols:
     min_val = float(df[col].min())
     max_val = float(df[col].max())
     default_val = float(df[col].mean())
-    input_data[col] = st.sidebar.slider(col, min_value=min_val, max_value=max_val, value=default_val)
+
+    if col in selected_races or col in selected_ages:
+        input_data[col] = st.sidebar.slider(col, min_value=min_val, max_value=max_val, value=default_val)
+    else:
+        input_data[col] = default_val
 
 input_df = pd.DataFrame([input_data])
 prediction = model.predict(input_df)[0]
@@ -77,7 +101,7 @@ risk_level, emoji = get_risk_level(prediction)
 # Results Section
 st.markdown("### 📊 Prediction Results")
 st.metric("Predicted cases per 100k", f"{prediction:.2f}")
-st.markdown(f"**Risk Level:** {emoji} `{risk_level}`")
+st.markdown(f"**Risk Level:** {emoji} {risk_level}")
 
 # Optional Recommendations Section
 st.markdown("---")
@@ -90,4 +114,3 @@ elif risk_level == "Low":
     st.success("😌 Low risk. Maintain good hygiene and monitor symptoms.")
 else:
     st.success("✅ Minimal risk. Stay healthy and keep up good practices!")
-
