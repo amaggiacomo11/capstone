@@ -11,8 +11,7 @@ from xgboost import XGBRegressor
 # Load data from GitHub
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/amaggiacomo11/capstone/main/Capstone_flu%2804092025%29.csv"
-    return pd.read_csv(url)
+    return pd.read_csv("flu_app/flu_data.csv")
 
 df = load_data()
 
