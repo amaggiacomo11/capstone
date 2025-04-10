@@ -8,10 +8,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, r2_score
 from xgboost import XGBRegressor
 
-# Load data from GitHub
-@st.cache_data
+@st.cache_data(show_spinner=True)
 def load_data():
-    return pd.read_csv("fludata.csv")
+    df = pd.read_csv("fludata.csv")
+    return df
 
 df = load_data()
 
