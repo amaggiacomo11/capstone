@@ -17,8 +17,8 @@ def load_data():
 df = load_data()
 
 st.set_page_config(page_title="Flu Outbreak Predictor", layout="wide")
-st.title("🦠 Flu Outbreak Risk Predictor")
-st.write("This app predicts flu cases per 100k people and determines outbreak risk level.")
+st.title("🦠 Flu Outbreak Risk Predictor 🦠")
+st.write("🌡️Like a weather app but for your flu exposure!🌡️")
 
 # Define race and age group columns
 race_columns = [
@@ -101,7 +101,7 @@ risk_level, emoji = get_risk_level(prediction)
 # Results Section
 st.markdown("### 📊 Prediction Results")
 st.metric("Predicted cases per 100k", f"{prediction:.2f}")
-st.markdown(f"**Risk Level:** {emoji} {risk_level}")
+st.markdown(f"### **Risk Level: {emoji} {risk_level}**")
 
 # Optional Recommendations Section
 st.markdown("---")
